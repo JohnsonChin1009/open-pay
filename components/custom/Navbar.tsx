@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import PrivyButton from "@/components/custom/PrivyButton"
 import { Menu, X } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 
 export default function Navbar() {
@@ -10,12 +11,19 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="  mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <div className="bg-yellow-400 text-black font-bold text-xl px-3 py-1 rounded-lg">OpenPay</div>
+              <div className="relative w-[200px] h-[60px]">
+                <Image 
+                  src="/logo.png"
+                  alt="Open Pay Logo"
+                  fill
+                  objectFit="contain"
+                />
+              </div>
             </Link>
           </div>
 
@@ -51,7 +59,7 @@ export default function Navbar() {
 
           {/* Desktop CTA Button */}
           <div className="hidden md:block">
-            <Button className="bg-black text-white hover:bg-gray-800 transition-colors">Get Started</Button>
+            <PrivyButton />
           </div>
 
           {/* Mobile menu button */}
@@ -85,7 +93,7 @@ export default function Navbar() {
                 Request
               </Link>
               <div className="px-3 py-2">
-                <Button className="w-full bg-black text-white hover:bg-gray-800 transition-colors">Get Started</Button>
+                <PrivyButton />
               </div>
             </div>
           </div>
