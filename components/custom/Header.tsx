@@ -6,8 +6,8 @@ import ToggleThemeButton from "@/components/custom/ToggleThemeButton";
 export default function Header() {
     return (
         <header className="flex items-center justify-between py-4">
-            <div></div>
-            <div></div>
+            <div><Notebook /></div> {/* TODO: Change to a better icon */}
+            <div>openpay</div>
             <ToggleThemeButton />
         </header>
     )
