@@ -1,30 +1,40 @@
 "use client";
 
-type Message = {
-  role: "user" | "bot";
-  text: string;
+import { Message } from "@/lib/types";
+import React from "react";
+import ReactMarkdown from "react-markdown"; // optional, for formatting Gemini output
+
+type ChatMessagesProps = {
+  messages: Message[];
 };
 
-const dummyMessages: Message[] = [
-  { role: "user", text: "Hi there!" },
-  { role: "bot", text: "Hello! How can I assist you today?" },
-  { role: "user", text: "Tell me a joke." },
-  { role: "bot", text: "Why don't scientists trust atoms? Because they make up everything!" },
-];
+export default function ChatMessages({ messages }: ChatMessagesProps) {
+  if (!messages || messages.length === 0) {
+    return (
+      <div className="text-center text-gray-400 text-sm mt-8">
+        Start the conversation 👋
+      </div>
+    );
+  }
 
-export default function ChatMessages() {
   return (
-    <div className="space-y-4">
-      {dummyMessages.map((msg, i) => (
+    <div className="flex flex-col space-y-4 px-2 md:px-4 overflow-y-auto">
+      {messages.map((msg, i) => (
         <div
           key={i}
-          className={`max-w-[75%] px-4 py-2 rounded-lg text-sm ${
+          className={`max-w-[85%] px-4 py-3 rounded-xl text-sm whitespace-pre-wrap break-words shadow-md ${
             msg.role === "user"
-              ? "bg-blue-500 text-white self-end ml-auto"
-              : "bg-gray-200 text-gray-800 self-start mr-auto"
+              ? "bg-blue-600 text-white self-end ml-auto"
+              : "bg-white text-gray-800 self-start mr-auto border border-gray-200"
           }`}
         >
-          {msg.text}
+          {msg.role === "bot" ? (
+            <div className="prose prose-sm prose-gray dark:prose-invert">
+              <ReactMarkdown>{msg.message}</ReactMarkdown>
+            </div>
+          ) : (
+            msg.message
+          )}
         </div>
       ))}
     </div>
