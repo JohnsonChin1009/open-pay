@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Providers from "./providers";
+import { AuthProvider } from "./context/AuthProvider";
+import { SidebarProvider } from "./context/SidebarContext";
+import Sidebar from "@/components/custom/Sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -26,14 +28,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <link rel="apple-touch-icon" href="/apple-icon.png" type="image/png" sizes="180x180" />
+      <link
+        rel="apple-touch-icon"
+        href="/apple-icon.png"
+        type="image/png"
+        sizes="180x180"
+      />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
-        {children}
-        <Toaster richColors closeButton position="bottom-right"/>
-        </Providers>
+          <main>
+            <AuthProvider>
+                <SidebarProvider>
+                  <Sidebar />
+                  {children}
+                </SidebarProvider>
+            </AuthProvider>
+            <Toaster richColors closeButton position="bottom-right" />
+          </main>
       </body>
     </html>
   );
