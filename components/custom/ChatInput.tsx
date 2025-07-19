@@ -4,16 +4,18 @@
 import { useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AudioLines, Send } from "lucide-react";
+import { AudioLines, Send, Paperclip } from "lucide-react";
 
 type ChatInputProps = {
   onSend: (message: string) => void;
+  onFileAttach?: (file: File) => void; // optional file handler
 };
 
-export default function ChatInput({ onSend }: ChatInputProps) {
+export default function ChatInput({ onSend, onFileAttach }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSendMessage = () => {
     if (!message.trim()) return;
@@ -74,16 +76,42 @@ export default function ChatInput({ onSend }: ChatInputProps) {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && onFileAttach) {
+      onFileAttach(file);
+    }
+    // reset so same file can be uploaded again
+    e.target.value = "";
+  };
+
   const placeholder = "Ask anything";
 
   return (
     <div className="flex items-center space-x-2">
+      <input
+        type="file"
+        accept="*"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        className="hidden"
+      />
+
+      <Button
+        type="button"
+        variant="ghost"
+        onClick={() => fileInputRef.current?.click()}
+      >
+        <Paperclip size={16} />
+      </Button>
+
       <Input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
       />
+
       <Button type="button" onClick={message.trim() ? handleSendMessage : toggleListening}>
         {message.trim() ? (
           <Send size={16} />

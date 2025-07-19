@@ -1,50 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatInput from "@/components/custom/ChatInput";
 import ChatMessages from "@/components/custom/ChatMessages";
 import { sendToGemini } from "@/lib/gemini";
 import { Message } from "@/lib/types";
 
 export default function ChatSection() {
-    const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isNewUser, setIsNewUser] = useState(false);
 
-    const handleSendMessage = async (text: string) => {
+  useEffect(() => {
+    const hasSeenOnboarding = localStorage.getItem("hasSeenOnboarding");
+    if (!hasSeenOnboarding) {
+      setIsNewUser(true);
+      localStorage.setItem("hasSeenOnboarding", "true");
+    }
+  }, []);
+
+  const handleSendMessage = async (text: string) => {
     const userMessage: Message = {
-        role: "user",
-        message: text,
+      role: "user",
+      message: text,
     };
 
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-        // Call Gemini helper
-        const botText = await sendToGemini(text); // optionally add chat history
+      const botText = await sendToGemini(text);
 
-        const botReply: Message = {
-        role: "bot",
+      const botReply: Message = {
+        role: "system",
         message: botText,
-        };
+      };
 
-        setMessages((prev) => [...prev, botReply]);
+      setMessages((prev) => [...prev, botReply]);
     } catch (error) {
-        console.error("Gemini API Error:", error);
-        setMessages((prev) => [
+      console.error("Gemini API Error:", error);
+      setMessages((prev) => [
         ...prev,
-        { role: "bot", message: "Sorry, something went wrong." },
-        ]);
+        { role: "system", message: "Sorry, something went wrong." },
+      ]);
     }
-    };
+  };
 
-
-    return (
-        <div className="flex flex-col min-h-0 flex-grow w-full md:max-w-[80%] mx-auto space-y-2">
-        <div className="flex-grow overflow-y-auto">
-            <ChatMessages messages={messages} />
-        </div>
-        <div className="pb-4">
-            <ChatInput onSend={handleSendMessage} />
-        </div>
-        </div>
-    );
+  return (
+    <div className="flex flex-col min-h-0 flex-grow w-full md:max-w-[80%] mx-auto space-y-2">
+      <div className="flex-grow overflow-y-auto">
+        <ChatMessages messages={messages} isNewUser={isNewUser} />
+      </div>
+      <div className="pb-4">
+        <ChatInput onSend={handleSendMessage} />
+      </div>
+    </div>
+  );
 }

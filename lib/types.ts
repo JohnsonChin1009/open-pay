@@ -1,5 +1,5 @@
 type Message = {
-    role: "user" | "bot";
+    role: "user" | "system";
     message: string;
 }
 

@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Image from "next/image";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -25,7 +26,16 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 space-y-10">
+      <div className="relative h-[80px] w-[200px]">
+        <Image 
+          src="/logo.png"
+          alt="OpenPay Logo"
+          fill
+          objectFit="contain"
+          className="object-contain"
+        />
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-xl">Login to Your Account</CardTitle>

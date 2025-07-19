@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "./context/AuthProvider";
+import { SidebarProvider } from "./context/SidebarContext";
+import Sidebar from "@/components/custom/Sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -37,7 +39,10 @@ export default function RootLayout({
       >
           <main>
             <AuthProvider>
-            {children}
+                <SidebarProvider>
+                  <Sidebar />
+                  {children}
+                </SidebarProvider>
             </AuthProvider>
             <Toaster richColors closeButton position="bottom-right" />
           </main>
