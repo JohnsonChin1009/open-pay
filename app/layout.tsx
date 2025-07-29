@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Dela_Gothic_One, Montserrat } from "next/font/google";
 // import { AuthProvider } from "./context/AuthProvider";
 // import { SidebarProvider } from "./context/SidebarContext";
-import Sidebar from "@/components/custom/Sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -42,7 +41,6 @@ export default function RootLayout({
         <main>
           {/* <AuthProvider> */}
           {/* <SidebarProvider> */}
-          <Sidebar />
           {children}
           {/* </SidebarProvider> */}
           {/* </AuthProvider> */}
