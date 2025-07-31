@@ -30,7 +30,7 @@ export default function SignUpPage() {
       <div className="space-y-5">
         <div className="flex items-center gap-3">
           <Separator className="flex-1" />
-          Or with
+          or with
           <Separator className="flex-1" />
         </div>
         <div className="flex items-center justify-center">
