@@ -11,8 +11,8 @@ export default function SignUpPage() {
     <main className="flex flex-col justify-center min-h-screen px-8 py-10 space-y-20">
       <div className="space-y-10">
         <div className="space-y-3">
-          <h1 className="font-headline text-2xl">Hey there!</h1>
-          <p className="font-main font-medium">Welcome to OpenPay</p>
+          <h1 className="font-headline text-2xl">Let&apos;s get started</h1>
+          <p className="font-main font-medium">The first step towards trust</p>
         </div>
         <div className="flex flex-col space-y-6">
           <Input placeholder="Email" type="email" />
