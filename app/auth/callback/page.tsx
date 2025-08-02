@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import LoginAnimation from "@/components/LoginAnimation";
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -16,16 +17,14 @@ export default function AuthCallbackPage() {
         router.push("/login");
         return;
       }
-      router.push("/redirect");
-      // router.push("/dashboard"); // or wherever you want to go next
+    
+      router.push("/dashboard"); // or wherever you want to go next
     };
 
     finalizeLogin();
   }, [router]);
 
   return (
-    <main className="flex items-center justify-center h-screen">
-      <p className="text-center text-lg">Finishing sign in...</p>
-    </main>
+    <LoginAnimation />
   );
 }
