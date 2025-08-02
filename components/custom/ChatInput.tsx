@@ -32,7 +32,8 @@ export default function ChatInput({ onSend, onFileAttach }: ChatInputProps) {
 
   const startListening = () => {
     const SpeechRecognition =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       alert("Speech Recognition not supported in this browser.");
@@ -88,7 +89,7 @@ export default function ChatInput({ onSend, onFileAttach }: ChatInputProps) {
   const placeholder = "Ask anything";
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center gap-4 w-full">
       <input
         type="file"
         accept="*"
@@ -100,25 +101,33 @@ export default function ChatInput({ onSend, onFileAttach }: ChatInputProps) {
       <Button
         type="button"
         variant="ghost"
+        size="sm"
         onClick={() => fileInputRef.current?.click()}
+        className="flex-shrink-0 px-1 h-12 w-12"
       >
-        <Paperclip size={16} />
+        <Paperclip size={14} />
       </Button>
 
       <Input
+        className="flex-1 rounded-lg"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
       />
 
-      <Button type="button" onClick={message.trim() ? handleSendMessage : toggleListening}>
+      <Button
+        type="button"
+        size="sm"
+        onClick={message.trim() ? handleSendMessage : toggleListening}
+        className="flex-shrink-0 px-1 h-12 w-12"
+      >
         {message.trim() ? (
-          <Send size={16} />
+          <Send size={4} />
         ) : isListening ? (
-          <AudioLines size={16} className="animate-pulse text-red-500" />
+          <AudioLines size={4} className="animate-pulse text-red-500" />
         ) : (
-          <AudioLines size={16} />
+          <AudioLines size={4} />
         )}
       </Button>
     </div>
