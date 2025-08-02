@@ -19,7 +19,7 @@ export function HeroSection() {
       icon: DollarSign,
       text: "Get Your Stats",
       variant: "default" as const,
-      className: "bg-purple-500 text-white hover:bg-purple-600",
+      className: "bg-yellow-500 text-white hover:bg-yellow-600",
     },
     {
       icon: Hammer,
@@ -38,15 +38,12 @@ export function HeroSection() {
           Pay
         </h1>
 
-        <div className="max-w-2xl mx-auto mb-12">
-          <p className="text-xl md:text-2xl text-black/80 mb-2">
-            An app that simplifies MSMEs finance with chat that connects to 
-          </p>
-          <p className="text-xl md:text-2xl text-black/80">
-            and replaces tedious form with guide steps.
+        <div className="max-w-3xl mx-auto mb-12">
+          <p className="text-xl md:text-2xl text-black/80 leading-relaxed">
+            An app that simplifies MSMEs financewith chat that connects to POS systems via APIs,
+            and replaces tedious forms with guided steps.
           </p>
         </div>
-
         <div className="flex flex-wrap justify-center gap-4">
           {actionButtons.map((button, index) => (
             <button

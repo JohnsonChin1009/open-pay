@@ -23,7 +23,8 @@ export function Navbar() {
             />
           </div>
 
-          <div className="hidden md:flex items-center space-x-6">
+          {/* Links */}
+          <div className="hidden md:flex space-x-6 whitespace-nowrap">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -35,7 +36,8 @@ export function Navbar() {
             ))}
           </div>
 
-          <button className="bg-white text-black hover:bg-gray-100 rounded-full px-6">
+          {/* Button */}
+          <button className="font-headline bg-white text-black hover:bg-gray-100 rounded-full px-6 py-1.5 whitespace-nowrap">
             Get Started
           </button>
         </div>
