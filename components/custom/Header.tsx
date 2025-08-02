@@ -4,16 +4,16 @@ import ToggleThemeButton from "@/components/custom/ToggleThemeButton";
 import ToggleLanguageButton from "@/components/custom/ToggleLanguageButton";
 import { PanelRight } from "lucide-react";
 import Image from "next/image";
-import { useSidebar } from "@/app/context/SidebarContext";
+// import { useSidebar } from "@/app/context/SidebarContext";
 
 export default function Header() {
-  const { toggleSidebar } = useSidebar();
+  // const { toggleSidebar } = useSidebar();
 
   return (
     <header className="flex items-center justify-between py-4 border-b px-4">
-      <button onClick={toggleSidebar}>
+      {/* <button onClick={toggleSidebar}> */}
         <PanelRight size={20} />
-      </button>
+      {/* </button> */}
       <div className="relative h-[40px] w-[120px]">
         <Image
           src="/logo.png"
