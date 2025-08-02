@@ -17,14 +17,16 @@ export default function AuthCallbackPage() {
         router.push("/login");
         return;
       }
-    
+
+      const user = data.session.user;
+      if (user?.id) {
+        localStorage.setItem("user_id", user.id);
+      }
       router.push("/dashboard"); // or wherever you want to go next
     };
 
     finalizeLogin();
   }, [router]);
 
-  return (
-    <LoginAnimation />
-  );
+  return <LoginAnimation />;
 }
