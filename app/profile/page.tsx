@@ -25,7 +25,7 @@ const links = [
 export default function ProfilePage() {
   return (
     <main className="flex flex-col min-h-screen">
-      <div className="absolute top-0 left-0 h-[20vh]">
+      <div className="absolute top-0 left-0 max-h-screen w-full">
         <img
           src="/top-background.svg"
           alt="Top Background"
@@ -37,7 +37,7 @@ export default function ProfilePage() {
           <div className="flex flex-col items-center justify-center space-y-2">
             <Avatar className="w-32 h-32 border-[2px] border-black">
               <AvatarImage src="https://avatars.githubusercontent.com/u/107231772?v=4" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarFallback>JC</AvatarFallback>
             </Avatar>
             <p className="font-headline">johnson</p>
           </div>{" "}

@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AudioLines, Send, Paperclip } from "lucide-react";
+import { useState, useRef } from "react";
 
 type ChatInputProps = {
   onSend: (message: string) => void;
@@ -82,14 +81,14 @@ export default function ChatInput({ onSend, onFileAttach }: ChatInputProps) {
     if (file && onFileAttach) {
       onFileAttach(file);
     }
-    // reset so same file can be uploaded again
-    e.target.value = "";
+    e.target.value = ""; // reset input to allow same file re-upload
   };
 
   const placeholder = "Ask anything";
 
   return (
     <div className="flex items-center gap-4 w-full">
+      {/* Hidden file input */}
       <input
         type="file"
         accept="*"
@@ -98,16 +97,18 @@ export default function ChatInput({ onSend, onFileAttach }: ChatInputProps) {
         className="hidden"
       />
 
+      {/* File attachment button */}
       <Button
         type="button"
         variant="ghost"
-        size="sm"
+        size="icon"
         onClick={() => fileInputRef.current?.click()}
         className="flex-shrink-0 px-1 h-12 w-12"
       >
         <Paperclip size={14} />
       </Button>
 
+      {/* Text input */}
       <Input
         className="flex-1 rounded-lg"
         value={message}
@@ -116,6 +117,7 @@ export default function ChatInput({ onSend, onFileAttach }: ChatInputProps) {
         placeholder={placeholder}
       />
 
+      {/* Send / Voice button */}
       <Button
         type="button"
         size="sm"
@@ -123,11 +125,11 @@ export default function ChatInput({ onSend, onFileAttach }: ChatInputProps) {
         className="flex-shrink-0 px-1 h-12 w-12"
       >
         {message.trim() ? (
-          <Send size={4} />
+          <Send size={16} />
         ) : isListening ? (
-          <AudioLines size={4} className="animate-pulse text-red-500" />
+          <AudioLines size={16} className="animate-pulse text-red-500" />
         ) : (
-          <AudioLines size={4} />
+          <AudioLines size={16} />
         )}
       </Button>
     </div>

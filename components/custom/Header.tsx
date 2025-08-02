@@ -1,31 +1,25 @@
 "use client";
 
-import ToggleThemeButton from "@/components/custom/ToggleThemeButton";
-import ToggleLanguageButton from "@/components/custom/ToggleLanguageButton";
-import { PanelRight } from "lucide-react";
+import ProfileButton from "@/components/custom/ProfileButton";
 import Image from "next/image";
-// import { useSidebar } from "@/app/context/SidebarContext";
+import { IoMdMenu } from "react-icons/io";
 
 export default function Header() {
-  // const { toggleSidebar } = useSidebar();
-
   return (
-    <header className="flex items-center justify-between py-4 border-b px-4">
-      {/* <button onClick={toggleSidebar}> */}
-        <PanelRight size={20} />
-      {/* </button> */}
-      <div className="relative h-[40px] w-[120px]">
+    <header className="flex justify-between w-full items-center">
+      <div>
+        <IoMdMenu size={24} />
+      </div>
+      <div className="relative w-[180px] h-[72px]">
         <Image
           src="/logo.png"
-          alt="OpenPay Logo"
+          alt="openpay logo"
           fill
-          className="object-contain opacity-0 md:opacity-100"
+          objectFit="contain"
+          className="object-contain"
         />
       </div>
-      <div className="space-x-1 md:space-x-2">
-        <ToggleLanguageButton />
-        <ToggleThemeButton />
-      </div>
+      <ProfileButton />
     </header>
   );
 }
