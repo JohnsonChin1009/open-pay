@@ -11,7 +11,10 @@ type ChatMessagesProps = {
   isNewUser: boolean;
 };
 
-export default function ChatMessages({ messages, isNewUser }: ChatMessagesProps) {
+export default function ChatMessages({
+  messages,
+  isNewUser,
+}: ChatMessagesProps) {
   const [displayedMessages, setDisplayedMessages] = useState<Message[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +51,7 @@ export default function ChatMessages({ messages, isNewUser }: ChatMessagesProps)
           key={i}
           className={`max-w-[85%] px-4 py-3 rounded-xl text-sm whitespace-pre-wrap break-words shadow-md ${
             msg.role === "user"
-              ? "bg-blue-600 text-white self-end ml-auto"
+              ? "bg-primary text-black self-end ml-auto"
               : "bg-white text-gray-800 self-start mr-auto border border-gray-200"
           }`}
         >

@@ -44,13 +44,25 @@ export default function ChatSection() {
     }
   };
 
+  const handleFileAttach = (file: File) => {
+    const fileMessage: Message = {
+      role: "user",
+      message: `📎 Uploaded file: **${file.name}** (${Math.round(file.size / 1024)} KB)`,
+    };
+
+    setMessages((prev) => [...prev, fileMessage]);
+
+    // Optional: You could also upload the file somewhere and send the link to Gemini
+    // const botResponse = await sendToGemini(`User uploaded file: ${file.name}`);
+  };
+
   return (
     <div className="flex flex-col min-h-0 flex-grow w-full md:max-w-[90%] mx-auto space-y-2">
       <div className="flex-grow overflow-y-auto">
         <ChatMessages messages={messages} isNewUser={isNewUser} />
       </div>
       <div className="pb-4 flex items-center">
-        <ChatInput onSend={handleSendMessage} />
+        <ChatInput onSend={handleSendMessage} onFileAttach={handleFileAttach} />
       </div>
     </div>
   );

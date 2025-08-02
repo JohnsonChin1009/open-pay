@@ -1,6 +1,9 @@
 type Message = {
-    role: "user" | "system";
-    message: string;
-}
+  role: "user" | "system";
+  message: string;
+  fileName?: string;
+  fileURL?: string;
+};
 
-export type { Message }
+export type { Message };
+
