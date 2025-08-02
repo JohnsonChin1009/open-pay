@@ -11,7 +11,6 @@ export default function ProfileButton() {
 
   const handleClickLogout = async () => {
     await supabase.auth.signOut();
-    localStorage.removeItem("user_id");
     router.push("/sign-up");
   };
   useEffect(() => {
