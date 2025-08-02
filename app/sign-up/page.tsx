@@ -20,10 +20,12 @@ export default function SignUpPage() {
   };
 
   return (
-    <main className="flex flex-col justify-center min-h-screen px-8 py-10 space-y-20">
-      <div className="space-y-10">
-        <div className="space-y-3">
-          <h1 className="font-headline text-2xl">Let&apos; get started</h1>
+    <main className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-8 md:px-16 py-10 bg-white">
+      <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl space-y-16">
+        <div className="space-y-3 text-center">
+          <h1 className="font-headline text-3xl sm:text-4xl">
+            Let&apos; get started
+          </h1>
           <p className="font-main font-medium">
             Taking the first step towards trust
           </p>
@@ -32,28 +34,28 @@ export default function SignUpPage() {
           <Input placeholder="Email" type="email" />
           <div className="space-y-2">
             <Input placeholder="Password" type="password" />
-            <Button variant="text" className="justify-end">
+            <Button variant="text" className="flex justify-end">
               Forgot Password?
             </Button>
           </div>
         </div>
         <div>
-          <Button>Login</Button>
+          <Button className="w-full">Login</Button>
         </div>
       </div>
-      <div className="space-y-5">
-        <div className="flex items-center gap-3">
+      <div className="space-y-5 mt-10">
+        <div className="flex items-center gap-3 text-sm">
           <Separator className="flex-1" />
           or with
           <Separator className="flex-1" />
         </div>
-        <div className="flex items-center justify-center">
+        <div className="flex justify-center">
           <Button
             variant="outline"
-            className="rounded-md max-w-[50%]"
+            className="w-full max-w-xs gap-2"
             onClick={handleLoginWithGoogle}
           >
-            <FcGoogle size={24} />
+            <FcGoogle size={20} />
             Google
           </Button>
         </div>

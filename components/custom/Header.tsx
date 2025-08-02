@@ -10,7 +10,7 @@ export default function Header() {
       <div>
         <IoMdMenu size={24} />
       </div>
-      <div className="relative w-[180px] h-[72px]">
+      <div className="relative w-[180px] lg:w-[240px] h-[72px] lg:h-[96px]">
         <Image
           src="/logo.png"
           alt="openpay logo"
