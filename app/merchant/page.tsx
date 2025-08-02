@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Container from "@/components/custom/Container";
+import { Button } from "@/components/ui/button";
 
 export default function MerchantPage() {
   const [formData, setFormData] = useState({
@@ -67,7 +68,7 @@ export default function MerchantPage() {
 
         <div className="relative z-10 flex min-h-screen items-center justify-center p-6">
           <div className="bg-white/60 backdrop-blur-xl border border-zinc-800 rounded-2xl shadow-xl p-8 w-full max-w-md space-y-6">
-            <h1 className="text-2xl font-bold text-black-900 text-center">Add Transaction</h1>
+            <h1 className="font-headline text-2xl sm:text-3xl text-black-900 text-center">Add Transaction</h1>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
@@ -125,13 +126,13 @@ export default function MerchantPage() {
                 className="w-full border border-zinc-800 p-2 rounded-lg focus:outline-yellow-400 bg-white/80"
               />
 
-              <button
+              <Button 
                 type="submit"
                 disabled={loading}
-                className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-600 transition duration-200"
+                className="w-full py-2 px-4 rounded-lg hover:bg-yellow-600 transition duration-200"
               >
                 {loading ? "Saving..." : "Add Transaction"}
-              </button>
+              </Button>
             </form>
 
             {status && <p className="text-sm text-center text-green-600">{status}</p>}
