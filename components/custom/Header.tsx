@@ -6,16 +6,16 @@ import { IoMdMenu } from "react-icons/io";
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between w-full flex-wrap gap-4 px-2 sm:px-4 md:px-0">
+    <header className="flex items-center justify-between w-full px-4 py-2">
       <div className="flex items-center gap-2">
         <IoMdMenu size={24} />
       </div>
-      <div className="relative w-[180px] lg:w-[240px] h-[72px] lg:h-[96px]">
+
+      <div className="relative w-[120px] h-[48px] sm:w-[140px] sm:h-[56px] md:w-[160px] md:h-[60px]">
         <Image
-          src="/logo.png"
+          src="/logo2.png"
           alt="openpay logo"
           fill
-          objectFit="contain"
           className="object-contain"
         />
       </div>

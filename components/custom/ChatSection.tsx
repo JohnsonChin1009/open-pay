@@ -57,11 +57,11 @@ export default function ChatSection() {
   };
 
   return (
-    <div className="flex flex-col min-h-0 flex-grow w-full md:max-w-[90%] mx-auto space-y-2">
-      <div className="flex-grow overflow-y-auto">
+    <div className="flex flex-col w-full h-full max-w-4xl mx-auto px-4 md:px-6 py-4">
+      <div className="flex-1 overflow-y-auto mb-4 space-y-2">
         <ChatMessages messages={messages} isNewUser={isNewUser} />
       </div>
-      <div className="pb-4 flex items-center">
+      <div className="pt-4 justify-content">
         <ChatInput onSend={handleSendMessage} onFileAttach={handleFileAttach} />
       </div>
     </div>

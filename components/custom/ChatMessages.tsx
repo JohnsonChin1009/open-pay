@@ -35,7 +35,7 @@ export default function ChatMessages({
 
   if (!displayedMessages || displayedMessages.length === 0) {
     return (
-      <div className="text-center text-gray-400 text-sm mt-8">
+      <div className="text-center text-gray-400 text-sm mb-184">
         Start the conversation 👋
       </div>
     );
