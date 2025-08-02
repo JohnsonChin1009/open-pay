@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💬 OpenPay — Voice-Based MSME Onboarding with AI + RAG
 
-## Getting Started
+OpenPay is an AI-first onboarding chat app designed for Malaysian MSMEs. It combines voice input, intelligent context tracking, and Retrieval-Augmented Generation (RAG) to verify user identity, assist business registration, and provide trusted financial guidance.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Features
+
+- 🎤 **Voice-to-text**: Natural input via Web Speech API
+- 🧠 **LLM-powered chat**: Gemini API for intelligent responses
+- 📄 **RAG-ready**: Smart document chunking + vector search with MongoDB
+- 🧩 **Persistent context**: Messages linked with session-aware context
+- 📲 **Mobile-friendly PWA** UI with beautiful chat interface
+
+---
+
+## 🧠 Tech Stack
+
+- **Next.js** (App Router) + **TypeScript**
+- **Google Generative AI (Gemini Pro)**
+- **MongoDB** (metadata + vector store)
+- **Supabase** (backend + authentication)
+- **LangChain-style custom RAG pipeline**
+- **TailwindCSS** + **ShadCN** + **Lucide Icons**
+- **Web Speech API** for voice input
+
+---
+
+## 🗃️ Document Ingestion (RAG)
+
+OpenPay ingests reference documents into MongoDB with the following format:
+
+```json
+{
+  "user_id": "user123",
+  "file_url": "https://example.com/file.pdf",
+  "file_name": "bank_loan_guide.pdf",
+  "uploaded_at": "2025-08-01T00:00:00Z",
+  "text_chunk": "To qualify for this SME loan, applicants must..."
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Local Development
+1. Clone the repo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+Copy
+Edit
+git clone https://github.com/your-username/openpay.git
+cd openpay
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Install dependencies
 
-## Learn More
+```bash
+npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Set up environment variables
+```bash
+cp .env.sample .env
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Let's run this
+```bash
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 💡 Usage
+- User enters the chat (or speaks) → Voice is transcribed → Intent is analyzed
+- LLM fetches matching chunks from MongoDB (via vector search)
+- Gemini answers the user with grounded facts (RAG)
