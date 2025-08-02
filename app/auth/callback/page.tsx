@@ -14,17 +14,18 @@ export default function AuthCallbackPage() {
 
       if (error || !data.session) {
         console.error("Failed to retrieve session:", error);
-        router.push("/login");
+        router.push("/sign-up");
         return;
       }
-    
+
+      const user_id = data.session.user.id;
+
+      localStorage.setItem("user_id", user_id);
       router.push("/dashboard"); // or wherever you want to go next
     };
 
     finalizeLogin();
   }, [router]);
 
-  return (
-    <LoginAnimation />
-  );
+  return <LoginAnimation />;
 }
