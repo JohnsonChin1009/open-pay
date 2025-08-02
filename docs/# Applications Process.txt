@@ -1,0 +1,197 @@
+# Applications Process
+
+### 1. SME Loans
+
+**SME Loan (3-4 weeks process time or longer) normally banker will need approval from gov as it is gov support (2 weeks) whole process will take up 2-3 months**
+
+1. Maybank SME Loan (Business Register State, Business Registration Number (SSM), Phone Number) will undergo checking with CCRIS/CTOS/Credit Bureau
+
+SME Micro Finnancing, TEKUN, Affin Bank (other banks that also provide SME Loan)
+
+### **SME Digital Financing (MAYBANK)**
+
+- **Loan Amount**: RM3,000 – RM250,000 (online); up to RM20 million via personalized facilities.
+- **Tenure**: 1 – 5 years (for loans ≤ RM250,000); up to 25 years for larger facilities.
+- **Eligibility**: Malaysian-owned Sole Proprietorships, Partnerships, or Sdn. Bhd. businesses with turnover < RM50 million and ≥1 year in operation.
+- **Approval / Disbursement**:
+    - Instant approval (~10 minutes) for digital-savvy clients; funds disbursed within 1 minute online.
+    - Full documentation review for personalized financing may take up to 2 business days.
+- **Collateral**: Not required for faceless financing ≤ RM500k; larger loans may require collateral.
+- **Interest Rates**: Starting from ~6.5% p.a., with lower rates for higher financing amounts.
+
+### **SME Micro Financing (MAYBANK)**
+
+- **Loan Amount**: RM3,000 – RM50,000
+- **Tenure**: Up to 5 years
+- **Eligibility**: Annual turnover below RM300,000; limited to 1–4 full-time employees; bankable business ≥1 year.
+- **Collateral**: None required
+- **Approval Time**: ~10 minutes; funds disbursed within minutes for eligible existing customers.
+
+## Digital SME Startup Financing (Alliance Bank)
+
+- **Loan Amount**: RM up to 1,000,000 depending on tier
+- **Tenure**: Up to 5 years
+- **Eligibility**: Malaysian-registered businesses; startups with at least 6 months in operation and annual sales ≥ RM50,000.
+- **Collateral**: Not required for digital loans
+- **Approval Process**: Fully online application with minimal documentation
+- **Features**: Faster onboarding for early-stage MSMEs; ideal for operational expansion.
+
+## Vanigham Financing Scheme (VFS) (SME Bank)
+
+- **Loan Amount**: RM100,000 – RM300,000
+- **Purpose**: Financing for machinery, commercial vehicles, working capital
+- **Government Subsidy**: Partial profit-rate subsidy provided
+- **Eligibility**: MSMEs with viable growth plans; open until 31 December 2027
+- **Disbursement & Access**: Focused on supporting entrepreneurs throughout Malaysia
+- **Benefits**: Government-backed scheme designed to scale growth across strategic sectors.
+
+**TLDR**
+
+- **Maybank** offers fast, digitized loans (RM3K–250K) with minimal friction—ideal for MSMEs needing quick working capital.
+- **Alliance Bank** provides a broader range of loan sizes (up to RM1M) with online accessibility and no collateral.
+- **SME Bank VFS** is a government-supported scheme ideal for larger investments in assets and expansion, with subsidy support.
+
+## Comparison Table
+
+| **Bank / Scheme** | **Loan Amount** | **Tenure** | **Collateral** | **Approval Speed** | **Ideal For** |
+| --- | --- | --- | --- | --- | --- |
+| **Maybank SME Digital Financing** | RM3,000–250,000 | Up to 5 years (longer for larger loans) | No collateral (≤RM500k) | Instant (10 min) | Small businesses & startups |
+| **Maybank SME Micro Financing** | RM3,000–50,000 | Up to 5 years | None | ~10 min | Micro-enterprises |
+| **Alliance Digital SME Financing** | Up to RM1,000,000 | Up to 5 years | No collateral | Online process; fast | Startups & growing SMEs |
+| **SME Bank VFS** | RM100,000–300,000 | Varies | Likely none / minimal | Subsidized, structured | Asset-heavy SMEs (machinery, vehicles) |
+
+### 2. E-invoice
+
+Based on the guidelines released by **Lembaga Hasil Dalam Negeri (LHDN/Malaysia Inland Revenue Board)** as of 2024–2025.
+
+**e-Invoicing** is a digital method for issuing, receiving, and storing invoices electronically. It’s part of Malaysia's digital tax reform to improve **tax compliance, reduce fraud, and streamline processes** for businesses and LHDN.
+
+Who needs to implement?
+
+| **Amount** | **Date** |
+| --- | --- |
+| > 100 million | 1/8/2024 |
+| > 25 - 100 million | 1/1/2025 |
+| > 5 - 25 million | 1/7/2025 |
+| > 1 - 5 million | 1/1/2026 |
+| 500k - 1 million | 1/7/2026 |
+
+## Who Needs to Use e-Invoicing?
+
+- **Businesses and individuals** with income from **business, profession, or trade**
+- **All taxpayers** including companies, sole proprietors, partnerships, LLPs, and more
+- **Even those not GST-registered** (since GST is not in effect)
+
+## Types of e-Invoices
+
+| **Type** | **Description** |
+| --- | --- |
+| **Normal Invoice** | Standard invoice for supply of goods/services |
+| **Credit Note** | For reducing value of previously issued invoice |
+| **Debit Note** | For increasing value of previously issued invoice |
+| **Refund Note** | For refunding a payment made earlier |
+| **Self-Billed Invoice** | When the buyer issues an invoice on behalf of the supplier |
+| **Summary Invoice** | Consolidated invoice covering multiple transactions (used in retail settings) |
+
+## e-Invoicing Flow (Simplified)
+
+1. **Seller issues an invoice** via their POS/accounting system.
+2. **Invoice is submitted to LHDN’s MyInvois system (PEPPOL-based)**.
+3. LHDN validates invoice and returns a **Unique Identifier + QR code**.
+4. **Seller sends validated invoice to buyer**.
+5. Both seller and buyer store validated e-invoice for record keeping.
+
+## Integration Methods
+
+1. **MyInvois Portal** (free):
+    - For small businesses and manual upload
+2. **API Integration**:
+    - For businesses with accounting/ERP/POS systems
+    - Requires system upgrade and developer support
+
+## What’s Required from Businesses?
+
+- Register with **MyInvois Portal** (once launched)
+- Ensure **complete invoice data** (buyer/seller info, tax ID, line items, etc.)
+- Integrate existing systems with **LHDN API** (if high-volume)
+- Train staff on **new workflows**
+- **Store invoices digitally** (min. 7 years)
+
+**E-Invoicing in Malaysia**
+
+To issue e-invoices, the following information is required:
+
+- **Company or Personal Details**: Including SSM registration number (for companies) or IC number (for individuals), address, and phone number.
+- **Tax Identification Number (TIN)**: Must be obtained via **e-Daftar**.
+- **MSIC Code**: Industry classification code for the type of business.
+- **LHDN Approval**: All e-invoices must be approved by the Inland Revenue Board of Malaysia (LHDN).
+- **Supported Formats**: Only **XML** and **JSON** formats are accepted (PDF is not supported).
+
+E-invoice (Company Name/Personal Details - [SSM/IC, Address, Phone], Tax Identification Number TIN -[e-Daftar], MSIC) need approval from LHDN
+
+- Only support XML/JSON (not pdf)
+
+### 3. Taxation for business (BRITNEY)
+
+### 4. SSM
+
+⁠SSM + related application for starting a business and merchant qr
+
+### **Types of Business You Can Register with SSM**
+
+1. **Sole Proprietorship** *(Enterprise)*
+2. **Partnership**
+3. **Private Limited Company (Sdn Bhd)**
+
+This guide focuses on the **Sole Proprietorship** or **Partnership** (most common for MSMEs starting out).
+
+### Registering a Sole Proprietorship/Partnership with SSM
+
+### **Step 1: Prepare the Required Documents**
+
+- **Owner's MyKad (NRIC)** – Malaysian identity card
+- **Business Name** – Choose a name (either personal or trade name)
+- **Business Address** – Must be a Malaysian address
+- **Business Type** – Select from the list provided during registration (e.g. food, IT services, etc.)
+
+### **Step 2: Create an Account on EzBiz Online (Optional but recommended)**
+
+1. Visit  https://ezbiz.ssm.com.my 
+2. Click **“Register”** and fill in the required details
+3. **Verify your account** by visiting an SSM office/kiosk **once** (with IC) for biometric verification *(Only for first-time users)*
+
+Once verified can use EzBiz for future renewals and updates online.
+
+### **Step 3: Register Your Business**
+
+You can do this **online via EzBiz** or **walk-in** to an SSM counter.
+
+### 📍 Via EzBiz (Online)
+
+1. Log into [ezbiz.ssm.com.my](http://ezbiz.ssm.com.my) 
+2. Choose **“New Business Registration”**
+3. Fill in:
+    - Business Name
+    - Business Type/Category
+    - Business Address
+    - Start Date
+    - Business Branches (if any)
+4. Upload required documents
+5. Pay the registration fee
+
+### Fees:
+
+- **RM30** – using your own personal name (e.g., “Amin bin Ali”)
+- **RM60** – using a trade/business name (e.g., “Amin Digital Services”)
+- **RM5** – for a business information printout (optional)
+
+### **Step 4: Receive Your Business Certificate**
+
+- Instantly available **online (PDF)** once approved (usually within 1 working day)
+- Or collect from the SSM office (if walk-in)
+
+### What can do with SSM?
+
+- Open a **business bank account**
+- Apply for **licenses**, **loans**, and **digital tools**
+- Use the **SSM Certificate (Form D)** as proof
