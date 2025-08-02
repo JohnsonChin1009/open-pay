@@ -16,8 +16,8 @@ export default function AuthCallbackPage() {
         router.push("/login");
         return;
       }
-
-      router.push("/dashboard"); // or wherever you want to go next
+      router.push("/redirect");
+      // router.push("/dashboard"); // or wherever you want to go next
     };
 
     finalizeLogin();
