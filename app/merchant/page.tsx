@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Container from "@/components/custom/Container";
 
 export default function MerchantPage() {
   const [formData, setFormData] = useState({
@@ -60,74 +61,83 @@ export default function MerchantPage() {
   };
 
   return (
-    <main className="max-w-md mx-auto p-6">
-      <h1 className="text-xl font-semibold mb-4">Add Transaction</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="amount"
-          type="number"
-          step="0.01"
-          placeholder="Amount"
-          value={formData.amount}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-          required
-        />
+    <div className="min-h-screen w-full bg-gradient-to-br from-yellow-100 via-yellow-200 to-white">
+      <div className="relative min-h-screen w-full">
+        <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent backdrop-blur-sm" />
 
-        <select
-          name="transaction_type"
-          value={formData.transaction_type}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        >
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
+        <div className="relative z-10 flex min-h-screen items-center justify-center p-6">
+          <div className="bg-white/60 backdrop-blur-xl border border-zinc-800 rounded-2xl shadow-xl p-8 w-full max-w-md space-y-6">
+            <h1 className="text-2xl font-bold text-black-900 text-center">Add Transaction</h1>
 
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        >
-          <option value="sales">Sales</option>
-          <option value="supplies">Supplies</option>
-          <option value="rent">Rent</option>
-          <option value="wages">Wages</option>
-        </select>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                name="amount"
+                type="number"
+                step="0.01"
+                placeholder="Amount"
+                value={formData.amount}
+                onChange={handleChange}
+                className="w-full border border-zinc-800 p-2 rounded-lg focus:outline-yellow-400 bg-white/80"
+                required
+              />
 
-        <select
-          name="payment_method"
-          value={formData.payment_method}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        >
-          <option value="cash">Cash</option>
-          <option value="e-wallet">E-wallet</option>
-          <option value="bank_transfer">Bank Transfer</option>
-          <option value="qr">QR</option>
-          <option value="others">Others</option>
-        </select>
+              <select
+                name="transaction_type"
+                value={formData.transaction_type}
+                onChange={handleChange}
+                className="w-full border border-zinc-800 p-2 rounded-lg focus:outline-yellow-400 bg-white/80"
+              >
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
 
-        <input
-          name="description"
-          type="text"
-          placeholder="Optional Description"
-          value={formData.description}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                className="w-full border border-zinc-800 p-2 rounded-lg focus:outline-yellow-400 bg-white/80"
+              >
+                <option value="sales">Sales</option>
+                <option value="supplies">Supplies</option>
+                <option value="rent">Rent</option>
+                <option value="wages">Wages</option>
+              </select>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-primary text-white py-2 px-4 rounded hover:bg-opacity-90"
-        >
-          {loading ? "Saving..." : "Add Transaction"}
-        </button>
-      </form>
+              <select
+                name="payment_method"
+                value={formData.payment_method}
+                onChange={handleChange}
+                className="w-full border border-zinc-800 p-2 rounded-lg focus:outline-yellow-400 bg-white/80"
+              >
+                <option value="cash">Cash</option>
+                <option value="e-wallet">E-wallet</option>
+                <option value="bank_transfer">Bank Transfer</option>
+                <option value="qr">QR</option>
+                <option value="others">Others</option>
+              </select>
 
-      {status && <p className="mt-4 text-sm text-center">{status}</p>}
-    </main>
+              <input
+                name="description"
+                type="text"
+                placeholder="Optional Description"
+                value={formData.description}
+                onChange={handleChange}
+                className="w-full border border-zinc-800 p-2 rounded-lg focus:outline-yellow-400 bg-white/80"
+              />
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-600 transition duration-200"
+              >
+                {loading ? "Saving..." : "Add Transaction"}
+              </button>
+            </form>
+
+            {status && <p className="text-sm text-center text-green-600">{status}</p>}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
