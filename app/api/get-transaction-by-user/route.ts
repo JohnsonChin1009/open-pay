@@ -18,10 +18,13 @@ export async function GET(req: Request) {
     .eq("user_id", user_id)
     .order("timestamp", { ascending: false });
 
+  console.log(`🔍 Get Transactions for user ${user_id}:`);
+  console.log(`   📊 Found ${data?.length || 0} transactions`);
+
   if (error) {
     console.error("Supabase Fetch Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
+  console.log("Fetched transactions:", data);
   return NextResponse.json({ success: true, data });
 }

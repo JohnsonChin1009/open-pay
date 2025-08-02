@@ -1,194 +1,191 @@
-// Create this as: app/api/debug-rag/route.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { MongoClient } from "mongodb";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const mongoUri = process.env.MONGODB_URI!;
+const client = new MongoClient(mongoUri);
 const dbName = "openpay";
 
-export async function POST(req: NextRequest) {
-  const { prompt } = await req.json();
-
-  console.log("🔍 Debug RAG request:", prompt);
-
-  try {
-    // Step 1: Try basic Gemini response first
-    if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json(
-        { error: "Gemini API key not set" },
-        { status: 500 },
-      );
-    }
-
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-    // Step 2: Try to generate embedding
-    console.log("📝 Generating embedding...");
-    let embedding: number[];
-
-    try {
-      const embeddingModel = genAI.getGenerativeModel({
-        model: "embedding-001",
-      });
-      const embeddingResult = await embeddingModel.embedContent(prompt);
-      embedding = embeddingResult.embedding.values;
-      console.log(`✅ Embedding generated: ${embedding.length} dimensions`);
-    } catch (embError) {
-      console.error("❌ Embedding generation failed:", embError);
-      return await fallbackResponse(genAI, prompt);
-    }
-
-    // Step 3: Try vector search
-    console.log("🔍 Attempting vector search...");
-    let chunks: any[] = [];
-
-    try {
-      chunks = await performVectorSearch(embedding);
-      console.log(`✅ Vector search completed: ${chunks.length} chunks found`);
-    } catch (searchError) {
-      console.error("❌ Vector search failed:", searchError);
-      console.log("🔄 Falling back to basic response...");
-      return await fallbackResponse(genAI, prompt);
-    }
-
-    // Step 4: Generate response
-    if (chunks.length > 0) {
-      console.log("📚 Generating RAG response...");
-      const response = await generateRAGResponse(genAI, prompt, chunks);
-
-      return NextResponse.json({
-        success: true,
-        type: "rag_response",
-        text: response,
-        chunksFound: chunks.length,
-        debug: {
-          embeddingDimensions: embedding.length,
-          searchSuccess: true,
-        },
-      });
-    } else {
-      console.log("📝 No relevant chunks found, using fallback...");
-      const response = await fallbackResponse(genAI, prompt);
-      return response;
-    }
-  } catch (error) {
-    console.error("💥 Unexpected error:", error);
-    return NextResponse.json(
-      {
-        error: "Internal server error",
-        details: error instanceof Error ? error.message : "Unknown error",
-        success: false,
-      },
-      { status: 500 },
-    );
-  }
-}
-
-async function performVectorSearch(queryVector: number[]): Promise<any[]> {
-  const client = new MongoClient(mongoUri);
-
+export async function GET() {
   try {
     await client.connect();
     const db = client.db(dbName);
-    const collection = db.collection("embeddings");
-
-    // First, check if collection has data
-    const count = await collection.countDocuments({});
-    console.log(`📊 Collection has ${count} documents`);
-
-    if (count === 0) {
-      throw new Error("No documents in embeddings collection");
-    }
-
-    // Try the vector search
-    const results = await collection
-      .aggregate([
-        {
-          $vectorSearch: {
-            index: "vector_index",
-            path: "embedding",
-            queryVector: queryVector,
-            numCandidates: 100,
-            limit: 5,
-          },
-        },
-        {
-          $addFields: {
-            score: { $meta: "vectorSearchScore" },
-          },
-        },
-        {
-          $project: {
-            content: 1,
-            metadata: 1,
-            score: 1,
-          },
-        },
-      ])
-      .toArray();
-
-    return results;
-  } finally {
+    const embeddingsCol = db.collection("embeddings");
+    
+    // Get collection stats
+    const totalDocs = await embeddingsCol.countDocuments();
+    
+    // Get sample documents
+    const sampleDocs = await embeddingsCol.find({}).limit(3).toArray();
+    
+    // Check indexes
+    const indexes = await embeddingsCol.indexes();
+    
     await client.close();
+    
+    return NextResponse.json({
+      success: true,
+      stats: {
+        totalDocuments: totalDocs,
+        sampleDocuments: sampleDocs.map(doc => ({
+          _id: doc._id,
+          file_name: doc.file_name,
+          chunk_index: doc.chunk_index,
+          hasTextChunk: !!doc.text_chunk,
+          textPreview: doc.text_chunk?.substring(0, 100) + "...",
+          hasEmbedding: !!doc.embedding,
+          embeddingLength: doc.embedding?.length,
+          uploaded_at: doc.uploaded_at
+        })),
+        indexes: indexes.map(idx => ({
+          name: idx.name,
+          key: idx.key
+        }))
+      }
+    });
+  } catch (error) {
+    await client.close();
+    return NextResponse.json({
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error"
+    }, { status: 500 });
   }
 }
 
-async function generateRAGResponse(
-  genAI: GoogleGenerativeAI,
-  prompt: string,
-  chunks: any[],
-): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-  const context = chunks.map((chunk) => chunk.content).join("\n\n");
-
-  const systemPrompt = `You are a helpful assistant. Use the following context to answer the user's question about SME microfinancing and business topics.
-
-Context:
-${context}
-
-Please provide a comprehensive answer based on this context. If the context doesn't fully address the question, mention what information is available and suggest what additional details might be helpful.`;
-
-  const chat = model.startChat({
-    history: [
-      {
-        role: "user",
-        parts: [{ text: systemPrompt }],
-      },
-    ],
-  });
-
-  const result = await chat.sendMessage(prompt);
-  return await result.response.text();
-}
-
-async function fallbackResponse(
-  genAI: GoogleGenerativeAI,
-  prompt: string,
-): Promise<NextResponse> {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-  const systemPrompt = `You are a helpful assistant specializing in SME (Small and Medium Enterprise) business topics, microfinancing, and business development. Provide helpful information based on your general knowledge.`;
-
-  const chat = model.startChat({
-    history: [
-      {
-        role: "user",
-        parts: [{ text: systemPrompt }],
-      },
-    ],
-  });
-
-  const result = await chat.sendMessage(prompt);
-  const text = await result.response.text();
-
-  return NextResponse.json({
-    success: true,
-    type: "fallback_response",
-    text: text,
-    debug: {
-      usedRAG: false,
-      reason: "Vector search unavailable",
-    },
-  });
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { query = "Johnson", testEmbedding = true } = body;
+    
+    const results: any = {
+      query,
+      steps: []
+    };
+    
+    // Step 1: Test embedding generation
+    if (testEmbedding) {
+      try {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+        const embeddingModel = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
+        
+        const embeddingResp = await embeddingModel.embedContent({
+          content: {
+            parts: [{ text: query }],
+            role: "user",
+          },
+        });
+        
+        const queryEmbedding = embeddingResp.embedding.values;
+        results.steps.push({
+          step: "embedding_generation",
+          success: true,
+          dimension: queryEmbedding.length,
+          sampleValues: queryEmbedding.slice(0, 5)
+        });
+      } catch (error) {
+        results.steps.push({
+          step: "embedding_generation",
+          success: false,
+          error: error instanceof Error ? error.message : "Unknown error"
+        });
+        return NextResponse.json(results);
+      }
+    }
+    
+    // Step 2: Test MongoDB connection and basic search
+    try {
+      await client.connect();
+      const db = client.db(dbName);
+      const embeddingsCol = db.collection("embeddings");
+      
+      // Text search first
+      const textSearchResults = await embeddingsCol.find({
+        text_chunk: { $regex: query, $options: "i" }
+      }).limit(3).toArray();
+      
+      results.steps.push({
+        step: "text_search",
+        success: true,
+        resultsCount: textSearchResults.length,
+        results: textSearchResults.map(doc => ({
+          _id: doc._id,
+          file_name: doc.file_name,
+          textPreview: doc.text_chunk?.substring(0, 150) + "..."
+        }))
+      });
+      
+      // Vector search
+      if (testEmbedding) {
+        try {
+          const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+          const embeddingModel = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
+          
+          const embeddingResp = await embeddingModel.embedContent({
+            content: {
+              parts: [{ text: query }],
+              role: "user",
+            },
+          });
+          
+          const queryEmbedding = embeddingResp.embedding.values;
+          
+          const vectorResults = await embeddingsCol.aggregate([
+            {
+              $vectorSearch: {
+                index: "default",
+                path: "embedding",
+                queryVector: queryEmbedding,
+                numCandidates: 100,
+                limit: 5,
+              },
+            },
+            {
+              $project: {
+                _id: 1,
+                text_chunk: 1,
+                file_name: 1,
+                chunk_index: 1,
+                score: { $meta: "vectorSearchScore" }
+              }
+            }
+          ]).toArray();
+          
+          results.steps.push({
+            step: "vector_search",
+            success: true,
+            resultsCount: vectorResults.length,
+            results: vectorResults.map(doc => ({
+              _id: doc._id,
+              file_name: doc.file_name,
+              score: doc.score,
+              textPreview: doc.text_chunk?.substring(0, 150) + "..."
+            }))
+          });
+        } catch (vectorError) {
+          results.steps.push({
+            step: "vector_search",
+            success: false,
+            error: vectorError instanceof Error ? vectorError.message : "Unknown vector search error"
+          });
+        }
+      }
+      
+      await client.close();
+    } catch (error) {
+      await client.close();
+      results.steps.push({
+        step: "mongodb_connection",
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+    
+    return NextResponse.json(results);
+  } catch (error) {
+    return NextResponse.json({
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error"
+    }, { status: 500 });
+  }
 }

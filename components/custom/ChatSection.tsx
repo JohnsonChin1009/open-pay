@@ -5,10 +5,12 @@ import ChatInput from "@/components/custom/ChatInput";
 import ChatMessages from "@/components/custom/ChatMessages";
 import { sendToGemini } from "@/lib/gemini";
 import { Message } from "@/lib/types";
+import { supabase } from "@/lib/supabase";
 
 export default function ChatSection() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isNewUser, setIsNewUser] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const hasSeenOnboarding = localStorage.getItem("hasSeenOnboarding");
@@ -16,6 +18,34 @@ export default function ChatSection() {
       setIsNewUser(true);
       localStorage.setItem("hasSeenOnboarding", "true");
     }
+
+    // Get user ID
+    const getUserId = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        
+        if (session?.user?.id) {
+          setUserId(session.user.id);
+        } else {
+          // Fallback to localStorage if no session
+          const localUserId = localStorage.getItem("user_id");
+          if (localUserId) {
+            setUserId(localUserId);
+          }
+        }
+      } catch (error) {
+        console.error("Error getting user session:", error);
+        // Try localStorage as fallback
+        const localUserId = localStorage.getItem("user_id");
+        if (localUserId) {
+          setUserId(localUserId);
+        }
+      }
+    };
+
+    getUserId();
   }, []);
 
   const handleSendMessage = async (text: string) => {
@@ -27,7 +57,7 @@ export default function ChatSection() {
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-      const botText = await sendToGemini(text);
+      const botText = await sendToGemini(text, userId || undefined);
 
       const botReply: Message = {
         role: "system",
@@ -36,7 +66,7 @@ export default function ChatSection() {
 
       setMessages((prev) => [...prev, botReply]);
     } catch (error) {
-      console.error("Gemini API Error:", error);
+      console.error("API Error:", error);
       setMessages((prev) => [
         ...prev,
         { role: "system", message: "Sorry, something went wrong." },
@@ -44,25 +74,13 @@ export default function ChatSection() {
     }
   };
 
-  const handleFileAttach = (file: File) => {
-    const fileMessage: Message = {
-      role: "user",
-      message: `📎 Uploaded file: **${file.name}** (${Math.round(file.size / 1024)} KB)`,
-    };
-
-    setMessages((prev) => [...prev, fileMessage]);
-
-    // Optional: You could also upload the file somewhere and send the link to Gemini
-    // const botResponse = await sendToGemini(`User uploaded file: ${file.name}`);
-  };
-
   return (
-    <div className="flex flex-col w-full h-full max-w-4xl mx-auto px-4 md:px-6 py-4">
-      <div className="flex-1 overflow-y-auto mb-4 space-y-2">
+    <div className="flex flex-col min-h-0 flex-grow w-full md:max-w-[80%] mx-auto space-y-2">
+      <div className="flex-grow overflow-y-auto">
         <ChatMessages messages={messages} isNewUser={isNewUser} />
       </div>
-      <div className="pt-4 justify-content">
-        <ChatInput onSend={handleSendMessage} onFileAttach={handleFileAttach} />
+      <div className="pb-4">
+        <ChatInput onSend={handleSendMessage} />
       </div>
     </div>
   );

@@ -1,153 +1,160 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { generateAnswer } from "@/lib/generateAnswer";
 
-// Define known intents and their required fields
-const requiredFields = {
-  transfer_funds: ["amount", "recipient", "bank_name"],
-  check_loan_eligibility: ["ssm_number", "monthly_revenue"],
-  apply_permit_or_loan: ["business_type", "permit_type", "location"],
-  register_ssm: ["business_name", "business_type", "owner_ic", "address"],
-  open_business_account: ["bank_name", "business_name", "ssm_number", "owner_ic"],
-  register_sst: ["business_name", "ssm_number", "industry_type", "revenue"],
-  register_tourism_tax: ["business_name", "location", "accommodation_type"],
-  apply_grant: ["grant_type", "ssm_number", "business_sector"],
-  apply_loan: ["loan_type", "business_age", "monthly_revenue"],
-  update_profile: ["field_to_update", "new_value"],
-  request_support: ["issue_type", "description"],
-  inquire_einvoice: ["question_topic"],
-} as const;
-
-const validIntents = Object.keys(requiredFields) as (keyof typeof requiredFields)[];
-
-export async function POST(req: Request) {
-  const { prompt, history, conversationState } = await req.json();
-
-  if (!process.env.GEMINI_API_KEY) {
-    return NextResponse.json({ error: "Gemini API key is not set." }, { status: 500 });
-  }
-
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
-  let intent = conversationState?.currentIntent || null;
-  let fields = conversationState?.collectedFields || {};
-
+export async function GET() {
   try {
-    // Step 1: Detect intent only if not set
-    if (!intent) {
-      const intentChat = model.startChat({
-        history: [
-          {
-            role: "user",
-            parts: [
-              {
-                text:
-                  "You are a context-aware assistant. Based on the user message, detect their intent (one of: " +
-                  validIntents.join(", ") +
-                  ") and extract any provided fields. Respond only in JSON format: {\"intent\": \"...\", \"fields\": {...}}. If no match, return null intent.",
-              },
-            ],
-          },
-          ...history.map((text: string, i: number) => ({
-            role: i % 2 === 0 ? "user" : "model",
-            parts: [{ text }],
-          })),
-        ],
-      });
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-      const intentPrompt = `User message: "${prompt}"`;
-      const intentResult = await intentChat.sendMessage(intentPrompt);
-      const intentText = await intentResult.response.text();
-
-      try {
-        const parsed = JSON.parse(intentText);
-        intent = parsed.intent;
-        fields = parsed.fields || {};
-      } catch (err) {
-        console.warn("Intent JSON parse failed:", err);
-        return await handleFallback(model, prompt, history);
-      }
-    }
-
-    // If still no intent, fallback
-    if (!intent || !validIntents.includes(intent)) {
-      return await handleFallback(model, prompt, history);
-    }
-
-    // Step 2: Merge any new info from user into fields
-    const expected = requiredFields[intent as keyof typeof requiredFields];
-    for (const key of expected) {
-      if (!fields[key] && prompt.toLowerCase().includes(key.replace(/_/g, " "))) {
-        fields[key] = prompt; // simple placeholder mapping
-      }
-    }
-
-    const missing = expected.filter((key) => !fields[key]);
-    if (missing.length > 0) {
-      return NextResponse.json({
-        intent,
-        fields,
-        missingFields: missing,
-        message: `You're trying to ${intent.replace(/_/g, " ")}, but still missing: ${missing.join(", ")}`,
-      });
-    }
-
-    // Step 3: Final assistant response
-    const finalChat = model.startChat({
-      history: [
+    const result = await model.generateContent({
+      contents: [
         {
           role: "user",
-          parts: [
-            {
-              text:
-                `You are helping with: ${intent.replace(/_/g, " ")}. ` +
-                `The user has already provided: ${JSON.stringify(fields)}. ` +
-                `Continue assisting with any next steps. Reply in a warm, concise tone. Avoid repeating info unless asked.`,
-            },
-          ],
-        },
-        ...history.map((text: string, i: number) => ({
-          role: i % 2 === 0 ? "user" : "model",
-          parts: [{ text }],
-        })),
-      ],
+          parts: [{ text: "Hello, are you working?" }]
+        }
+      ]
     });
 
-    const result = await finalChat.sendMessage(prompt);
-    const text = await result.response.text();
+    const response = result.response.text();
+    console.log("Gemini API Response:", response);
 
-    return NextResponse.json({
-      intent,
-      fields,
-      message: "All required fields provided. Proceeding with task...",
-      text,
+    return NextResponse.json({ 
+      success: true, 
+      message: "Gemini API is working",
+      response: response
     });
   } catch (error) {
-    console.error("Gemini error:", error);
-    return NextResponse.json({ error: "Failed to generate response." }, { status: 500 });
+    console.error("Error pinging Gemini API:", error);
+    return NextResponse.json({ 
+      success: false, 
+      error: "Failed to connect to Gemini API",
+      details: error instanceof Error ? error.message : "Unknown error"
+    }, { status: 500 });
   }
 }
 
-async function handleFallback(model: any, prompt: string, history: string[]) {
-  const fallbackChat = model.startChat({
-    history: [
-      {
-        role: "user",
-        parts: [
-          {
-            text: "You're a friendly assistant who keeps track of prior conversation. Reply naturally and helpfully based on previous topics.",
-          },
-        ],
-      },
-      ...history.map((text: string, i: number) => ({
-        role: i % 2 === 0 ? "user" : "model",
-        parts: [{ text }],
-      })),
-    ],
-  });
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { prompt, history = [] } = body;
 
-  const result = await fallbackChat.sendMessage(prompt);
-  const text = await result.response.text();
-  return NextResponse.json({ message: "General fallback response", text });
+    // If no prompt provided, run the test instead
+    if (!prompt) {
+      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+      
+      // Test both text generation and embedding
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const embeddingModel = genAI.getGenerativeModel({ model: "embedding-001" });
+
+      // Test text generation
+      const textResult = await model.generateContent({
+        contents: [
+          {
+            role: "user",
+            parts: [{ text: "Hello, are you working?" }]
+          }
+        ]
+      });
+
+      // Test embedding
+      const embeddingResp = await embeddingModel.embedContent({
+        content: {
+          parts: [{ text: "test embedding" }],
+          role: "user",
+        },
+      });
+
+      const embedding = embeddingResp.embedding.values;
+      const textResponse = textResult.response.text();
+
+      return NextResponse.json({ 
+        success: true, 
+        message: "Both Gemini APIs are working",
+        textGeneration: {
+          working: true,
+          response: textResponse
+        },
+        embedding: {
+          working: true,
+          dimension: embedding.length,
+          sampleValues: embedding.slice(0, 5) // Show first 5 values
+        }
+      });
+    }
+
+    // Handle chat conversation with RAG
+    try {
+      // First try to get answer from RAG system
+      const ragAnswer = await generateAnswer(prompt);
+      
+      // If RAG returns a meaningful answer, use it
+      if (ragAnswer && !ragAnswer.includes("couldn't find any relevant information")) {
+        return NextResponse.json({
+          success: true,
+          text: ragAnswer,
+          source: "rag"
+        });
+      }
+    } catch (ragError) {
+      console.log("RAG failed, falling back to direct Gemini:", ragError);
+    }
+
+    // Fallback to direct Gemini conversation
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    // Build conversation history
+    const contents: any[] = [];
+    
+    // Add history if provided
+    for (let i = 0; i < history.length; i += 2) {
+      if (history[i]) {
+        contents.push({
+          role: "user",
+          parts: [{ text: history[i] }]
+        });
+      }
+      if (history[i + 1]) {
+        contents.push({
+          role: "model",
+          parts: [{ text: history[i + 1] }]
+        });
+      }
+    }
+
+    // Add current prompt
+    contents.push({
+      role: "user",
+      parts: [{ text: prompt }]
+    });
+
+    const result = await model.generateContent({
+      contents,
+      generationConfig: {
+        maxOutputTokens: 1000,
+        temperature: 0.7,
+      },
+    });
+
+    const response = result.response.text();
+
+    return NextResponse.json({
+      success: true,
+      text: response,
+      source: "direct"
+    });
+
+  } catch (error) {
+    console.error("Error in chat API:", error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        error: "Failed to generate response",
+        details: error instanceof Error ? error.message : "Unknown error"
+      },
+      { status: 500 }
+    );
+  }
 }

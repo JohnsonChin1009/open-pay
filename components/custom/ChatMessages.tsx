@@ -2,7 +2,6 @@
 
 import { Message } from "@/lib/types";
 import { useEffect, useRef, useState } from "react";
-import { onboardingMessages } from "@/lib/onboardingMessages";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
@@ -19,12 +18,8 @@ export default function ChatMessages({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isNewUser) {
-      setDisplayedMessages([...onboardingMessages, ...messages]);
-    } else {
-      setDisplayedMessages(messages);
-    }
-  }, [isNewUser, messages]);
+    setDisplayedMessages(messages);
+  }, [messages]);
 
   // Scroll to bottom when messages update
   useEffect(() => {
