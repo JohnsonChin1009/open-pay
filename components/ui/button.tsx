@@ -4,16 +4,16 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full w-full duration-100 text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 hover:cursor-pointer [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive font-main",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full duration-100 text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 hover:cursor-pointer [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive font-main",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-[#1C1C1C] shadow-xs hover:bg-primary/90 border-[1px] active:scale-99 shadow-[0_5px_0_0_#000] active:shadow-[0_2px_0_0_#000] active:translate-y-[2px] border-foreground font-headline",
+          "bg-primary w-full text-[#1C1C1C] shadow-xs hover:bg-primary/90 border-[1px] active:scale-99 shadow-[0_5px_0_0_#000] active:shadow-[0_2px_0_0_#000] active:translate-y-[2px] border-foreground font-headline",
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         text: "hover:underline text-black font-medium",
-        icon: "text-",
+        icon: "bg-primary p-3",
         outline:
           "bg-background text-[#1C1C1C] border border-black text-sm hover:bg-accent",
         secondary:

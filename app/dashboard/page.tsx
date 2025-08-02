@@ -1,13 +1,15 @@
 "use client";
 
-import Header from "@/components/custom/Header";
 import ChatSection from "@/components/custom/ChatSection";
+import LogoutButton from "@/components/custom/LogoutButton";
 
 export default function DashboardPage() {
   return (
-    <main className="h-screen flex flex-col px-6 md:px-8">
-      <Header />
-      <div className="flex-1 flex flex-col pt-4 md:pt-10">
+    <main className="min-h-screen flex flex-col">
+      <div className="flex flex-1 items-center justify-center">
+        <LogoutButton></LogoutButton>
+      </div>
+      <div className="px-8 py-4">
         <ChatSection />
       </div>
     </main>
